@@ -20,6 +20,7 @@
 This project showcases end-to-end DevOps engineering with AI integration, making it an ideal portfolio piece for job applications, freelance proposals, and technical demonstrations.
 
 ## 🏗 Architecture
+
    ┌──────────────────────┐
    │ Kubernetes / EKS     │
    │ Cluster              │
