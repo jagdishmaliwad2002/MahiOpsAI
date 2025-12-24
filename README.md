@@ -45,10 +45,6 @@ This project demonstrates **production-level DevOps skills combined with AI**, m
      │ React / Next.js │
      │ Dashboard UI    │
      └────────────────┘
-
-
----
-
 ## 🛠 Tech Stack
 
 | Layer          | Technology                 |
