@@ -20,7 +20,6 @@
 This project showcases end-to-end DevOps engineering with AI integration, making it an ideal portfolio piece for job applications, freelance proposals, and technical demonstrations.
 
 ## 🏗 Architecture
-
    ┌──────────────────────┐
    │ Kubernetes / EKS     │
    │ Cluster              │
@@ -45,7 +44,6 @@ This project showcases end-to-end DevOps engineering with AI integration, making
     │ React / Next.js   │
     │ Dashboard UI      │
     └──────────────────┘
-
     
 ## 🛠 Tech Stack
 
