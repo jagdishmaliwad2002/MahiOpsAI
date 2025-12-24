@@ -19,3 +19,62 @@ This project demonstrates **production-level DevOps skills combined with AI**, m
 
 ## 🏗 Architecture
 
+   ┌──────────────────┐
+   │  Kubernetes/EKS  │
+   │  Cluster         │
+   │                  │
+   │  - Pods          │
+   │  - Nodes         │
+   └─────┬────────────┘
+         │ Metrics & Logs
+ ┌───────▼────────┐
+ │  Prometheus     │
+ │  Grafana        │
+ │  Loki           │
+ └───────┬────────┘
+         │ API Calls
+ ┌───────▼────────┐
+ │  FastAPI Backend│
+ │  - Metrics API  │
+ │  - Logs API     │
+ │  - AI Engine    │
+ └───────┬────────┘
+         │ JSON
+ ┌───────▼────────┐
+ │ React/Next.js  │
+ │ Dashboard UI   │
+ └────────────────┘
+
+
+---
+
+## 🛠 Tech Stack
+
+| Layer          | Technology                 |
+|----------------|---------------------------|
+| Frontend       | React / Next.js           |
+| Backend        | FastAPI (Python)          |
+| Monitoring     | Prometheus + Grafana      |
+| Logging        | Loki                      |
+| AI Engine      | OpenAI / LLM              |
+| Infrastructure | Docker + Kubernetes + AWS |
+| CI/CD          | GitHub Actions            |
+
+---
+
+## ✨ Features
+
+- **Real-time Metrics:** CPU, memory, pod health, container stats  
+- **Log Aggregation:** Search and filter logs across containers  
+- **AI-Powered Insights:**  
+  - Explain errors in human-readable language  
+  - Predict potential failures  
+  - Suggest actionable fixes  
+- **Dashboard UI:** Interactive web interface for monitoring  
+- **CI/CD Integration:** Automated deployment using GitHub Actions  
+
+---
+
+## 📂 Project Structure
+
+
