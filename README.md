@@ -20,30 +20,26 @@
 This project showcases end-to-end DevOps engineering with AI integration, making it an ideal portfolio piece for job applications, freelance proposals, and technical demonstrations.
 
 ## 🏗 Architecture
-    ┌──────────────────────┐
-   │ Kubernetes / EKS     │
-   │ Cluster              │
-   │ - Pods               │
-   │ - Nodes              │
-   └─────────┬────────────┘
-             │ Metrics & Logs
-    ┌────────▼─────────┐
-    │ Prometheus        │
-    │ Grafana           │
-    │ Loki              │
-    └────────┬─────────┘
-             │ API Calls
-    ┌────────▼─────────┐
-    │ FastAPI Backend   │
-    │ - Metrics API     │
-    │ - Logs API        │
-    │ - AI Engine       │
-    └────────┬─────────┘
-             │ JSON
-    ┌────────▼─────────┐
-    │ React / Next.js   │
-    │ Dashboard UI      │
-    └──────────────────┘
+   flowchart TD
+    A[Kubernetes / EKS Cluster] --> A1[Pods]
+    A --> A2[Worker Nodes]
+
+    A1 -->|Metrics & Logs| B[Observability Layer]
+    A2 -->|Metrics & Logs| B
+
+    B --> B1[Prometheus]
+    B --> B2[Grafana]
+    B --> B3[Loki]
+
+    B1 -->|Metrics API| C[FastAPI Backend]
+    B3 -->|Logs API| C
+
+    C --> C1[Metrics Service]
+    C --> C2[Logs Service]
+    C --> C3[AI Engine]
+
+    C -->|JSON APIs| D[React / Next.js Dashboard]
+
 
     
 ## 🛠 Tech Stack
