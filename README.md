@@ -117,55 +117,57 @@ This project showcases end-to-end DevOps engineering with AI integration, making
 
 ## 📂 Project Structure
 MahiOpsAI/
-├── frontend/ # Next.js 14 dashboard
-│ ├── app/ # App router pages
-│ ├── components/ # Reusable UI components
-│ ├── lib/ # Utilities and hooks
-│ ├── services/ # API service clients
-│ └── styles/ # Tailwind + CSS modules
+├── frontend/                     # Next.js 14 dashboard
+│   ├── app/                      # App Router pages
+│   ├── components/               # Reusable UI components
+│   ├── lib/                      # Utilities & custom hooks
+│   ├── services/                 # API service clients
+│   └── styles/                   # Tailwind CSS & CSS modules
 │
-├── backend/ # FastAPI microservices
-│ ├── api/ # REST endpoints
-│ │ ├── v1/ # Versioned APIs
-│ │ │ ├── metrics.py
-│ │ │ ├── logs.py
-│ │ │ └── ai_engine.py
-│ ├── core/ # Config, security, middleware
-│ ├── models/ # Pydantic + SQLAlchemy models
-│ ├── services/ # Business logic
-│ ├── ml_models/ # Custom ML models
-│ └── main.py # FastAPI app entry
+├── backend/                      # FastAPI microservices
+│   ├── api/                      # REST endpoints
+│   │   ├── v1/                   # Versioned APIs
+│   │   │   ├── metrics.py        # Metrics endpoints
+│   │   │   ├── logs.py           # Logs endpoints
+│   │   │   └── ai_engine.py      # AI inference APIs
+│   ├── core/                     # Config, security, middleware
+│   ├── models/                   # Pydantic & SQLAlchemy models
+│   ├── services/                 # Business logic layer
+│   ├── ml_models/                # Custom ML models
+│   └── main.py                   # FastAPI application entry
 │
-├── monitoring/ # Monitoring stack configs
-│ ├── prometheus/ # Rules, alerts, configs
-│ ├── grafana/ # Dashboards, datasources
-│ └── loki/ # Log aggregation config
+├── monitoring/                   # Observability stack
+│   ├── prometheus/               # Rules, alerts & configs
+│   ├── grafana/                  # Dashboards & datasources
+│   └── loki/                     # Log aggregation config
 │
-├── k8s/ # Kubernetes manifests
-│ ├── base/ # Common resources
-│ ├── overlays/ # Environment-specific
-│ │ ├── dev/
-│ │ ├── staging/
-│ │ └── production/
-│ ├── helm/ # Helm charts (optional)
-│ └── crds/ # Custom Resource Definitions
+├── k8s/                          # Kubernetes manifests
+│   ├── base/                     # Common resources
+│   ├── overlays/                 # Environment-specific configs
+│   │   ├── dev/
+│   │   ├── staging/
+│   │   └── production/
+│   ├── helm/                     # Helm charts (optional)
+│   └── crds/                     # Custom Resource Definitions
 │
-├── infrastructure/ # IaC configurations
-│ ├── terraform/ # AWS/EKS provisioning
-│ └── ansible/ # Server configuration
+├── infrastructure/               # Infrastructure as Code (IaC)
+│   ├── terraform/                # AWS / EKS provisioning
+│   └── ansible/                  # Server configuration
 │
-├── ci-cd/ # Pipeline configurations
-│ ├── github-actions/ # Workflow definitions
-│ └── argocd/ # GitOps configurations
+├── ci-cd/                        # CI/CD configurations
+│   ├── github-actions/           # GitHub Actions workflows
+│   └── argocd/                   # GitOps deployment configs
 │
-├── scripts/ # Utility scripts
-├── tests/ # Test suites
-├── docs/ # Documentation
-├── docker-compose.yml # Local development
-├── Dockerfile # Multi-stage builds
-├── .github/ # PR templates, issue forms
+├── scripts/                      # Utility & automation scripts
+├── tests/                        # Test suites
+├── docs/                         # Project documentation
+│
+├── docker-compose.yml             # Local development setup
+├── Dockerfile                     # Multi-stage Docker builds
+├── .github/                       # PR templates & issue forms
 ├── README.md
 └── LICENSE
+
 
 
 ## 🚀 Getting Started
