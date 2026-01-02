@@ -1,13 +1,15 @@
-# Node
-frontend/node_modules
-frontend/.next
-
 # Python
-backend/venv
-__pycache__
+__pycache__/
+*.pyc
+venv/
 
-# Env files
-*.env
+# Node / Next.js
+node_modules/
+.next/
+dist/
 
-# Docker
+# Docker / Build junk
 *.log
+
+# OS
+.DS_Store

@@ -1,135 +1,148 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import psutil
-import time
-import docker
-client = docker.from_env()
+import os
 
-app = FastAPI(title="MahiOpsAI Backend")
+app = FastAPI()
 
 # -----------------------------
-# CORS (allow frontend access)
+# ⭐ CORS (allow frontend access)
 # -----------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for development
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# -----------------------------
-# Helper Functions
-# -----------------------------
-def get_cpu_usage():
-    return psutil.cpu_percent(interval=0.5)
+# ----------------------------------------------------
+# ⭐ Docker monitoring — only enabled when requested
+# ----------------------------------------------------
+DOCKER_ENABLED = os.getenv("DOCKER_ENABLED", "false").lower() == "true"
 
-def get_memory_details():
-    mem = psutil.virtual_memory()
-    return {
-        "total": mem.total,
-        "used": mem.used,
-        "percent": mem.percent
-    }
+if DOCKER_ENABLED:
+    import docker
+    docker_client = docker.from_env()
+else:
+    docker_client = None
+
 
 # -----------------------------
-# Root Endpoint
+# ⭐ Root
 # -----------------------------
 @app.get("/")
 def root():
     return {"status": "MahiOpsAI backend running"}
 
+
 # -----------------------------
-# Metrics Endpoints
+# ⭐ Metrics (CPU + Memory)
 # -----------------------------
-@app.get("/metrics/cpu")
-def cpu_metrics():
+def get_cpu_usage():
+    return round(psutil.cpu_percent(interval=1), 1)
+
+def get_memory_usage():
+    mem = psutil.virtual_memory()
     return {
-        "cpu_usage": get_cpu_usage()
+        "total": mem.total,
+        "used": mem.used,
+        "percent": round(mem.percent, 1),
     }
 
+@app.get("/metrics/cpu")
+def cpu_metric():
+    return {"cpu_usage": get_cpu_usage()}
+
 @app.get("/metrics/memory")
-def memory_metrics():
-    return get_memory_details()
+def memory_metric():
+    return get_memory_usage()
+
 
 # -----------------------------
-# AI Prediction Endpoint
+# ⭐ AI Prediction (simple logic for now)
 # -----------------------------
 @app.get("/ai/predict")
 def ai_predict():
     cpu = get_cpu_usage()
-    memory = get_memory_details()["percent"]
+    mem = get_memory_usage()["percent"]
 
-    if cpu > 80 or memory > 85:
-        prediction = "High risk of failure"
-        suggestions = [
-            "Scale resources",
-            "Restart heavy services",
-            "Check memory leaks"
-        ]
-    elif cpu > 60 or memory > 70:
-        prediction = "Moderate load detected"
-        suggestions = [
-            "Monitor closely",
-            "Optimize running processes"
-        ]
-    else:
-        prediction = "System healthy"
-        suggestions = ["No action required"]
+    if cpu > 85 or mem > 85:
+        return {
+            "failure_prediction": "High risk — possible service outage soon",
+            "auto_fix_suggestions": [
+                "Scale resources",
+                "Kill unused processes",
+                "Check running containers",
+            ],
+        }
+
+    if cpu > 60 or mem > 70:
+        return {
+            "failure_prediction": "Moderate load detected",
+            "auto_fix_suggestions": [
+                "Monitor closely",
+                "Optimize heavy apps",
+            ],
+        }
 
     return {
-        "failure_prediction": prediction,
-        "auto_fix_suggestions": suggestions
+        "failure_prediction": "System healthy",
+        "auto_fix_suggestions": ["No action required"],
     }
 
+
 # -----------------------------
-# Alerts Endpoint
+# ⭐ Alerts
 # -----------------------------
 @app.get("/alerts")
-def get_alerts():
+def alerts():
     cpu = get_cpu_usage()
-    memory = get_memory_details()["percent"]
+    mem = get_memory_usage()["percent"]
 
-    status = "OK"
-    if cpu > 80 or memory > 85:
-        status = "CRITICAL"
-    elif cpu > 60 or memory > 70:
-        status = "WARNING"
+    if cpu > 90 or mem > 90:
+        return {"status": "CRITICAL", "cpu": cpu, "memory": mem}
 
-    return {
-        "status": status,
-        "cpu": cpu,
-        "memory": memory
-    }
+    if cpu > 70 or mem > 75:
+        return {"status": "WARNING", "cpu": cpu, "memory": mem}
 
+    return {"status": "OK", "cpu": cpu, "memory": mem}
+
+
+# -----------------------------
+# ⭐ Docker containers status
+# -----------------------------
 @app.get("/docker/containers")
 def list_containers():
-    containers = client.containers.list(all=True)
+    if not docker_client:
+        return {
+            "containers": [],
+            "message": "Docker monitoring disabled in Kubernetes",
+        }
 
+    containers = docker_client.containers.list(all=True)
     result = []
 
     for c in containers:
-        ports = c.attrs.get("NetworkSettings", {}).get("Ports", {})
-
-        exposed = []
-
-        if ports:
-            for port, mappings in ports.items():
-                if mappings:
-                    for m in mappings:
-                        exposed.append({
-                            "container_port": port,
-                            "host": m.get("HostIp"),
-                            "host_port": m.get("HostPort"),
-                            "url": f"http://localhost:{m.get('HostPort')}"
-                        })
+        ports = []
+        if c.attrs.get("NetworkSettings", {}).get("Ports"):
+            for p, val in c.attrs["NetworkSettings"]["Ports"].items():
+                if val:
+                    host = val[0].get("HostIp", "")
+                    host_port = val[0].get("HostPort", "")
+                    ports.append({
+                        "container_port": p,
+                        "host": host,
+                        "host_port": host_port,
+                        "url": f"http://localhost:{host_port}",
+                    })
 
         result.append({
             "id": c.short_id,
             "name": c.name,
-            "image": c.image.tags[0] if c.image.tags else "unknown",
+            "image": c.image.tags[0] if c.image.tags else "",
             "status": c.status,
-            "ports": exposed
+            "ports": ports,
         })
 
     return {"containers": result}
