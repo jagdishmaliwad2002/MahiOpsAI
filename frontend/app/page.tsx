@@ -32,39 +32,47 @@ export default function Dashboard() {
   const [ai, setAi] = useState<AIResponse | null>(null);
   const [containers, setContainers] = useState<ContainerInfo[]>([]);
 
-  async function fetchData() {
-    try {
-      const cpuRes = await fetch("http://localhost:8000/metrics/cpu");
-      const cpuData = await cpuRes.json();
+ async function fetchData() {
+  try {
+    const cpuRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/metrics/cpu`
+    );
+    const cpuData = await cpuRes.json();
 
-      const memRes = await fetch("http://localhost:8000/metrics/memory");
-      const memData = await memRes.json();
+    const memRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/metrics/memory`
+    );
+    const memData = await memRes.json();
 
-      const aiRes = await fetch("http://localhost:8000/ai/predict");
-      const aiData = await aiRes.json();
+    const aiRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/ai/predict`
+    );
+    const aiData = await aiRes.json();
 
-      const dockerRes = await fetch(
-        "http://localhost:8000/docker/containers"
-      );
-      const dockerData = await dockerRes.json();
+    const dockerRes = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/docker/containers`
+    );
+    const dockerData = await dockerRes.json();
 
-      const time = new Date().toLocaleTimeString();
+    const time = new Date().toLocaleTimeString();
 
-      setCpu(cpuData.cpu_usage);
-      setMemory(memData.percent);
-      setAi(aiData);
-      setContainers(dockerData.containers || []);
+    setCpu(cpuData.cpu_usage);
+    setMemory(memData.percent);
+    setAi(aiData);
+    setContainers(dockerData.containers || []);
 
-      setCpuHistory((prev) =>
-        [...prev, { time, value: cpuData.cpu_usage }].slice(-25)
-      );
-      setMemoryHistory((prev) =>
-        [...prev, { time, value: memData.percent }].slice(-25)
-      );
-    } catch (e) {
-      console.error(e);
-    }
+    setCpuHistory((prev) =>
+      [...prev, { time, value: cpuData.cpu_usage }].slice(-25)
+    );
+
+    setMemoryHistory((prev) =>
+      [...prev, { time, value: memData.percent }].slice(-25)
+    );
+  } catch (e) {
+    console.error(e);
   }
+}
+
 
   useEffect(() => {
     fetchData();
