@@ -35,22 +35,22 @@ export default function Dashboard() {
  async function fetchData() {
   try {
     const cpuRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/metrics/cpu`
+      `${process.env.NEXT_PUBLIC_API_BASE}/metrics/cpu`
     );
     const cpuData = await cpuRes.json();
 
     const memRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/metrics/memory`
+      `${process.env.NEXT_PUBLIC_API_BASE}/metrics/memory`
     );
     const memData = await memRes.json();
 
     const aiRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/ai/predict`
+      `${process.env.NEXT_PUBLIC_API_BASE}/ai/predict`
     );
     const aiData = await aiRes.json();
 
     const dockerRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/docker/containers`
+      `${process.env.NEXT_PUBLIC_API_BASE}/docker/containers`
     );
     const dockerData = await dockerRes.json();
 
